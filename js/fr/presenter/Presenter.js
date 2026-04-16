@@ -74,7 +74,7 @@ export class Presenter {
 
                 const distanceZone = {
                     min: 0.30,
-                    max: 0.55
+                    max: 0.40
                 }
 
                 const isWithinX = normalizedX >= maskZone.xMin && normalizedX <= maskZone.xMax;
