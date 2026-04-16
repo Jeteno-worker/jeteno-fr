@@ -25,6 +25,7 @@ export class FrView {
         frame.classList.add('frame-mask');
 
         frameBackground.setAttribute('viewBox', '0 0 1280 720');
+        frameBackground.setAttribute('preserveAspectRatio', 'xMidYMid slice')
         frameBackground.classList.add('frame-background-mask');
         //вынести в отдельную функцию
         const pathFrame = document.createElementNS('http://www.w3.org/2000/svg', 'path');
