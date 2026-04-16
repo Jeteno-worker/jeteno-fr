@@ -49,7 +49,7 @@ export class FrModel {
             if (this.initialized && this.faceManager) {
                 const faceData = this.faceManager.getFaceData();
                 this.setFaceData(faceData);
-                // console.log('faceData: ', faceData);
+                console.log('faceData: ', faceData);
             }
         }, 2000);
     }

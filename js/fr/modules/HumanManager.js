@@ -6,7 +6,7 @@ export class HumanManager {
 
     async init () {
         this.human = new Human.Human({
-            debug: false,
+            debug: true,
             backend: 'webgl',
             modelBasePath: 'https://vladmandic.github.io/human-models/models/',
             face: {
