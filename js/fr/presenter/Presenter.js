@@ -66,15 +66,15 @@ export class Presenter {
                 console.log("distance: ", distance)
 
                 const maskZone = {
-                    xMin: 0.20,
+                    xMin: 0.30,
                     xMax: 0.40,
-                    yMin: 0.65,
-                    yMax: 0.90
+                    yMin: 0.45,
+                    yMax: 0.60
                 };
 
                 const distanceZone = {
-                    min: 0.57,
-                    max: 0.75
+                    min: 0.35,
+                    max: 0.55
                 }
 
                 const isWithinX = normalizedX >= maskZone.xMin && normalizedX <= maskZone.xMax;
