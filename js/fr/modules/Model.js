@@ -44,7 +44,7 @@ export class FrModel {
         if (this.pollingInterval) {
             clearInterval(this.pollingInterval);
         }
-
+        //переделать на рекурсивный таймаут
         this.pollingInterval = setInterval(() => {
             if (this.initialized && this.faceManager) {
                 const faceData = this.faceManager.getFaceData();

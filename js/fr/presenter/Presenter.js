@@ -23,7 +23,7 @@ export class Presenter {
 
         this.model.setVideo(videoElement)
 
-        await this.model.init()
+        await this.model.init()//передать сюда videoElement
     }
 
     smileCheck() {
@@ -60,6 +60,8 @@ export class Presenter {
 
                 const normalizedX = faceCenterX / rect.width;
                 const normalizedY = faceCenterY / rect.height;
+                console.log("normalizedX: ", normalizedX)
+                console.log("normalizedY: ", normalizedY)
 
                 const maskZone = {
                     xMin: 0.34,
@@ -76,6 +78,9 @@ export class Presenter {
                 const isWithinX = normalizedX >= maskZone.xMin && normalizedX <= maskZone.xMax;
                 const isWithinY = normalizedY >= maskZone.yMin && normalizedY <= maskZone.yMax;
                 const isDistanceZone = distance >= distanceZone.min && distance <= distanceZone.max;
+                console.log("distanceZone: ", distanceZone);
+                console.log("isWithinX: ", isWithinX);
+                console.log("isWithinY: ", isWithinY);
 
                 let positionMessage = '';
                 if (!isWithinX && !isWithinY && !isDistanceZone) {

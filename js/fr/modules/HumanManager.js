@@ -8,6 +8,7 @@ export class HumanManager {
         this.human = new Human.Human({
             debug: true,
             backend: 'webgl',
+            //перенести модель локально
             modelBasePath: 'https://vladmandic.github.io/human-models/models/',
             face: {
                 enabled: true,
