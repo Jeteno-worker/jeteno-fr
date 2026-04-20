@@ -3,6 +3,9 @@ import {SVG_PATHS_FACE_MASK, SVG_PATHS_BACKGROUND_MASK} from './svgPaths.js'
 export class FrView {
     constructor() {
         this.cameraContainer = document.getElementById('cameraContainer');
+        this.frContainer = document.getElementById('frContainer');
+        this._presenter = undefined
+        this.resetButton = undefined
     }
 
     createVideoBlock() {
@@ -83,7 +86,6 @@ export class FrView {
 
         const titleBlock = document.createElement("h3");
         titleBlock.classList.add("info__title");
-        titleBlock.textContent = 'Рады вас видеть'
 
         infoBlock.appendChild(titleBlock)
         this.cameraContainer.appendChild(infoBlock);
@@ -94,5 +96,29 @@ export class FrView {
         if (titleBlock) {
             titleBlock.textContent = message;
         }
+    }
+
+    createResetButton() {
+        const resetButton = document.createElement('button');
+        resetButton.textContent = 'Пройти проверку заново';
+        resetButton.className = 'reset__button';
+
+        this.frContainer.appendChild(resetButton);
+
+        resetButton.addEventListener('click', () => {
+            this._presenter.resetAndRestart()
+        })
+
+        this.resetButton = resetButton;
+    }
+
+    showResetButton(show) {
+        if (this.resetButton) {
+            this.resetButton.style.display = show ? 'block' : 'none';
+        }
+    }
+
+    setPresenter(presenter) {
+        this._presenter = presenter;
     }
 }

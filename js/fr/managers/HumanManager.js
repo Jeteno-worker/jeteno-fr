@@ -6,9 +6,8 @@ export class HumanManager {
 
     async init () {
         this.human = new Human.Human({
-            debug: true,
+            debug: false,
             backend: 'webgl',
-            //перенести модель локально
             modelBasePath: './public/models',
             face: {
                 enabled: true, //Сетка лица

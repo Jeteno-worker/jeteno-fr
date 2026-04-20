@@ -51,7 +51,6 @@ export class FrModel {
             if (this.initialized && this.faceManager) {
                 const faceData = this.faceManager.getFaceData();
                 this.setFaceData(faceData);
-                // console.log('faceData: ', faceData);
                 this.eyeCheck()
             }
 
@@ -77,14 +76,10 @@ export class FrModel {
     }
 
     smileCheck() {
-        if (!this.faceData) return
+        if (!this.faceData || !this.faceData.emotion) return
 
-        if (this.faceData.emotion) {
-            const happyEmotion = this.faceData.emotion.find(e => e.emotion === 'happy');
-            if (happyEmotion && happyEmotion.score > 0.6) {
-                return true;
-            }
-        }
+        const happyEmotion = this.faceData.emotion.find(e => e.emotion === 'happy');
+        return happyEmotion && happyEmotion.score > 0.6
     }
 
     facePosition() {
@@ -119,5 +114,16 @@ export class FrModel {
         const lowerCenter = lowerPoints[Math.floor(lowerPoints.length / 2)];
 
         return Math.abs(upperCenter[1] - lowerCenter[1]);
+    }
+
+    reset() {
+        this.faceData = null;
+
+        if (this.pollingTimeout) {
+            clearTimeout(this.pollingTimeout);
+            this.pollingTimeout = null;
+        }
+
+        this.getFaceData();
     }
 }
