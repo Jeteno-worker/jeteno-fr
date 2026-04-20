@@ -82,7 +82,7 @@ export class Presenter {
                     this.view.updateInfoBlockMessage('Верните лицо в рамку');
                 }
             }
-        }, 100)
+        }, 600)
     }
 
     smileCheck() {
@@ -99,7 +99,7 @@ export class Presenter {
                 this.view.updateInfoBlockMessage('Пожалуйста, улыбнитесь');
             }
 
-            this.checkTimeout = setTimeout(check, 100)
+            this.checkTimeout = setTimeout(check, 600)
         }
 
         check()
@@ -117,7 +117,7 @@ export class Presenter {
                 this.view.updateInfoBlockMessage('Пожалуйста, моргните');
             }
 
-            this.checkTimeout = setTimeout(check, 100)
+            this.checkTimeout = setTimeout(check, 600)
         }
 
         check()

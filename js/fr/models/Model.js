@@ -54,7 +54,7 @@ export class FrModel {
                 this.eyeCheck()
             }
 
-            this.pollingTimeout = setTimeout(polling, 100);
+            this.pollingTimeout = setTimeout(polling, 400);
         }
 
         polling()
