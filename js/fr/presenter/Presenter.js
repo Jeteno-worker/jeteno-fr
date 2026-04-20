@@ -4,9 +4,7 @@ export class Presenter {
         this.model = model
         this.isSmileDetected = false;
         this.isBlinkDetected = false;
-        this.checkTimeout = null;
         this.currentStage = 'position';
-        this.checkInterval = 800
     }
 
     async initStream() {
@@ -33,138 +31,67 @@ export class Presenter {
     facePositionCheck() {
         const faceMask = document.querySelector('.frame-mask');
 
-        // this.facePositionInterval = setInterval(() => {
-        //     if (faceMask) {
-        //         const {faceCenterX, faceCenterY, distance} = this.model.facePosition()
-        //         const rect = faceMask.getBoundingClientRect();
-        //
-        //         const normalizedX = faceCenterX / rect.width;
-        //         const normalizedY = faceCenterY / rect.height;
-        //
-        //         const maskZone = {
-        //             xMin: 0.25,
-        //             xMax: 0.40,
-        //             yMin: 0.50,
-        //             yMax: 0.65
-        //         };
-        //
-        //         const distanceZone = {
-        //             min: 0.20,
-        //             max: 0.65
-        //         }
-        //
-        //         const isWithinX = normalizedX >= maskZone.xMin && normalizedX <= maskZone.xMax;
-        //         const isWithinY = normalizedY >= maskZone.yMin && normalizedY <= maskZone.yMax;
-        //         const isDistanceZone = distance >= distanceZone.min && distance <= distanceZone.max;
-        //
-        //         if (this.currentStage === 'position') {
-        //             let positionMessage = '';
-        //             if (!isWithinX && !isWithinY && !isDistanceZone) {
-        //                 positionMessage = 'Пожалуйста, поместите лицо в центр кадра';
-        //             } else if (!isDistanceZone) {
-        //                 positionMessage = distance < distanceZone.min ? 'Отдалите камеру' : 'Приблизьте камеру';
-        //             } else if (!isWithinX) {
-        //                 positionMessage = normalizedX < maskZone.xMin ? 'Сместитесь влево' : 'Сместитесь вправо';
-        //             } else if (!isWithinY) {
-        //                 positionMessage = normalizedY < maskZone.yMin ? 'Опустите голову ниже' : 'Поднимите голову выше';
-        //             }
-        //
-        //             this.view.updateInfoBlockMessage(positionMessage)
-        //         }
-        //
-        //         const isInPosition =  isWithinX && isWithinY && isDistanceZone
-        //         if (isInPosition && this.currentStage === 'position') {
-        //             this.determineAndStartStage();
-        //         }
-        //
-        //         if (!isInPosition && this.currentStage !== 'position' && this.currentStage !== 'complete') {
-        //             this.currentStage = 'position';
-        //             this.stopTimeoutChecking();
-        //             this.view.updateInfoBlockMessage('Верните лицо в рамку');
-        //         }
-        //     }
-        // }, this.checkInterval)
-        if (faceMask) {
-            const {faceCenterX, faceCenterY, distance} = this.model.facePosition()
-            const rect = faceMask.getBoundingClientRect();
+        if (!faceMask) return
 
-            const normalizedX = faceCenterX / rect.width;
-            const normalizedY = faceCenterY / rect.height;
+        const {faceCenterX, faceCenterY, distance} = this.model.facePosition()
+        const rect = faceMask.getBoundingClientRect();
 
-            const maskZone = {
-                xMin: 0.25,
-                xMax: 0.40,
-                yMin: 0.50,
-                yMax: 0.65
-            };
+        const normalizedX = faceCenterX / rect.width;
+        const normalizedY = faceCenterY / rect.height;
 
-            const distanceZone = {
-                min: 0.20,
-                max: 0.65
+        const maskZone = {
+            xMin: 0.25,
+            xMax: 0.40,
+            yMin: 0.50,
+            yMax: 0.65
+        };
+
+        const distanceZone = {
+            min: 0.20,
+            max: 0.65
+        }
+
+        const isWithinX = normalizedX >= maskZone.xMin && normalizedX <= maskZone.xMax;
+        const isWithinY = normalizedY >= maskZone.yMin && normalizedY <= maskZone.yMax;
+        const isDistanceZone = distance >= distanceZone.min && distance <= distanceZone.max;
+
+        if (this.currentStage === 'position') {
+            let positionMessage = '';
+            if (!isWithinX && !isWithinY && !isDistanceZone) {
+                positionMessage = 'Пожалуйста, поместите лицо в центр кадра';
+            } else if (!isDistanceZone) {
+                positionMessage = distance < distanceZone.min ? 'Отдалите камеру' : 'Приблизьте камеру';
+            } else if (!isWithinX) {
+                positionMessage = normalizedX < maskZone.xMin ? 'Сместитесь влево' : 'Сместитесь вправо';
+            } else if (!isWithinY) {
+                positionMessage = normalizedY < maskZone.yMin ? 'Опустите голову ниже' : 'Поднимите голову выше';
             }
 
-            const isWithinX = normalizedX >= maskZone.xMin && normalizedX <= maskZone.xMax;
-            const isWithinY = normalizedY >= maskZone.yMin && normalizedY <= maskZone.yMax;
-            const isDistanceZone = distance >= distanceZone.min && distance <= distanceZone.max;
+            this.view.updateInfoBlockMessage(positionMessage)
+        }
 
-            if (this.currentStage === 'position') {
-                let positionMessage = '';
-                if (!isWithinX && !isWithinY && !isDistanceZone) {
-                    positionMessage = 'Пожалуйста, поместите лицо в центр кадра';
-                } else if (!isDistanceZone) {
-                    positionMessage = distance < distanceZone.min ? 'Отдалите камеру' : 'Приблизьте камеру';
-                } else if (!isWithinX) {
-                    positionMessage = normalizedX < maskZone.xMin ? 'Сместитесь влево' : 'Сместитесь вправо';
-                } else if (!isWithinY) {
-                    positionMessage = normalizedY < maskZone.yMin ? 'Опустите голову ниже' : 'Поднимите голову выше';
-                }
+        const isInPosition =  isWithinX && isWithinY && isDistanceZone
+        if (isInPosition && this.currentStage === 'position') {
+            this.determineAndStartStage();
+        }
 
-                this.view.updateInfoBlockMessage(positionMessage)
-            }
-
-            const isInPosition =  isWithinX && isWithinY && isDistanceZone
-            if (isInPosition && this.currentStage === 'position') {
-                this.determineAndStartStage();
-            }
-
-            if (!isInPosition && this.currentStage !== 'position' && this.currentStage !== 'complete') {
-                this.currentStage = 'position';
-                this.stopTimeoutChecking();
-                this.view.updateInfoBlockMessage('Верните лицо в рамку');
-            }
+        if (!isInPosition && this.currentStage !== 'position' && this.currentStage !== 'complete') {
+            this.currentStage = 'position';
+            this.view.updateInfoBlockMessage('Верните лицо в рамку');
         }
 
         requestAnimationFrame(() => this.facePositionCheck());
     }
 
     smileCheck() {
-        // const check = () => {
-        //     if (this.currentStage !== 'smile') return;
-        //
-        //     const isSmiling = this.model.smileCheck();
-        //
-        //     if (isSmiling && !this.isSmileDetected) {
-        //         this.isSmileDetected = true;
-        //         this.stopTimeoutChecking();
-        //         this.view.updateInfoBlockMessage('Пожалуйста, подождите ...');
-        //         this.blinkCheck()
-        //     } else if (!isSmiling && !this.isSmileDetected) {
-        //         this.view.updateInfoBlockMessage('Пожалуйста, улыбнитесь');
-        //     }
-        //
-        //     this.checkTimeout = setTimeout(check, this.checkInterval)
-        // }
-        //
-        // check()
         if (this.currentStage !== 'smile') return;
 
         const isSmiling = this.model.smileCheck();
 
         if (isSmiling && !this.isSmileDetected) {
             this.isSmileDetected = true;
-            this.stopTimeoutChecking();
             this.view.updateInfoBlockMessage('Пожалуйста, подождите ...');
-            this.blinkCheck()
+            this.determineAndStartStage()
         } else if (!isSmiling && !this.isSmileDetected) {
             this.view.updateInfoBlockMessage('Пожалуйста, улыбнитесь');
         }
@@ -173,27 +100,12 @@ export class Presenter {
     }
 
     blinkCheck() {
-        // const check = () => {
-        //     if (this.currentStage !== 'blink') return;
-        //
-        //     const isBlinking = this.model.eyeCheck();
-        //     if (isBlinking && !this.isBlinkDetected) {
-        //         this.isBlinkDetected = true
-        //         this.stopTimeoutChecking();
-        //     } else if (!isBlinking && !this.isBlinkDetected) {
-        //         this.view.updateInfoBlockMessage('Пожалуйста, моргните несколько раз');
-        //     }
-        //
-        //     this.checkTimeout = setTimeout(check, this.checkInterval)
-        // }
-        //
-        // check()
         if (this.currentStage !== 'blink') return;
 
         const isBlinking = this.model.eyeCheck();
         if (isBlinking && !this.isBlinkDetected) {
             this.isBlinkDetected = true
-            // this.stopTimeoutChecking();
+            this.determineAndStartStage()
         } else if (!isBlinking && !this.isBlinkDetected) {
             this.view.updateInfoBlockMessage('Пожалуйста, моргните несколько раз');
         }
@@ -202,16 +114,7 @@ export class Presenter {
         requestAnimationFrame(() => this.blinkCheck());
     }
 
-    stopTimeoutChecking() {
-        if (this.checkTimeout) {
-            clearTimeout(this.checkTimeout);
-            this.checkTimeout = null;
-        }
-    }
-
     determineAndStartStage() {
-        this.stopTimeoutChecking();
-
         if (this.isBlinkDetected) {
             this.currentStage = 'complete';
             this.view.updateInfoBlockMessage('Проверка пройдена!');
@@ -229,8 +132,6 @@ export class Presenter {
         this.isSmileDetected = false;
         this.isBlinkDetected = false;
         this.currentStage = 'position';
-
-        this.stopTimeoutChecking()
 
         this.model.reset();
         this.view.showResetButton(false);

@@ -4,7 +4,6 @@ export class FrModel {
         this.videoElement = null;
         this.faceManager = faceManager;
         this.initialized = false;
-        this.pollingTimeout = null;
         this.faceData = null;
     }
 
@@ -43,26 +42,8 @@ export class FrModel {
     getFaceData() {
         if (!this.initialized) return
 
-        // if (this.pollingTimeout) {
-        //     clearTimeout(this.pollingTimeout);
-        // }
-
-        // const polling = () => {
-        //     if (this.initialized && this.faceManager) {
-        //         const faceData = this.faceManager.getFaceData();
-        //         // console.log("faceData: ", faceData)
-        //         this.setFaceData(faceData);
-        //         this.eyeCheck()
-        //     }
-        //
-        //     this.pollingTimeout = setTimeout(polling, 800);
-        // }
-        //
-        // polling()
-
         if (this.initialized && this.faceManager) {
             const faceData = this.faceManager.getFaceData();
-            // console.log("faceData: ", faceData)
             this.setFaceData(faceData);
             this.eyeCheck()
         }
@@ -106,11 +87,6 @@ export class FrModel {
 
     reset() {
         this.faceData = null;
-
-        if (this.pollingTimeout) {
-            clearTimeout(this.pollingTimeout);
-            this.pollingTimeout = null;
-        }
 
         this.getFaceData();
     }
