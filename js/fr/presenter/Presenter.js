@@ -49,7 +49,7 @@ export class Presenter {
                 };
 
                 const distanceZone = {
-                    min: 0.25,
+                    min: 0.20,
                     max: 0.45
                 }
 
