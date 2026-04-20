@@ -43,21 +43,31 @@ export class FrModel {
     getFaceData() {
         if (!this.initialized) return
 
-        if (this.pollingTimeout) {
-            clearTimeout(this.pollingTimeout);
+        // if (this.pollingTimeout) {
+        //     clearTimeout(this.pollingTimeout);
+        // }
+
+        // const polling = () => {
+        //     if (this.initialized && this.faceManager) {
+        //         const faceData = this.faceManager.getFaceData();
+        //         // console.log("faceData: ", faceData)
+        //         this.setFaceData(faceData);
+        //         this.eyeCheck()
+        //     }
+        //
+        //     this.pollingTimeout = setTimeout(polling, 800);
+        // }
+        //
+        // polling()
+
+        if (this.initialized && this.faceManager) {
+            const faceData = this.faceManager.getFaceData();
+            // console.log("faceData: ", faceData)
+            this.setFaceData(faceData);
+            this.eyeCheck()
         }
 
-        const polling = () => {
-            if (this.initialized && this.faceManager) {
-                const faceData = this.faceManager.getFaceData();
-                this.setFaceData(faceData);
-                this.eyeCheck()
-            }
-
-            this.pollingTimeout = setTimeout(polling, 800);
-        }
-
-        polling()
+        requestAnimationFrame(() => this.getFaceData());
     }
 
     setVideo(videoElement) {
@@ -76,10 +86,7 @@ export class FrModel {
     }
 
     smileCheck() {
-        if (!this.faceData || !this.faceData.emotion) return
-
-        const happyEmotion = this.faceData.emotion.find(e => e.emotion === 'happy');
-        return happyEmotion && happyEmotion.score > 0.6
+        return this.faceData?.isSmiling || false;
     }
 
     facePosition() {
@@ -94,26 +101,7 @@ export class FrModel {
     }
 
     eyeCheck() {
-        if (!this.faceData) return
-
-        const {leftEyeUpper0, leftEyeLower0, rightEyeUpper0, rightEyeLower0} = this.faceData.annotations;
-
-        const leftEyeOpenness = this.calculateEyeOpenness(leftEyeUpper0, leftEyeLower0);
-        const rightEyeOpenness = this.calculateEyeOpenness(rightEyeUpper0, rightEyeLower0);
-
-        const BLINK_THRESHOLD = 8;
-
-        const isLeftBlinking = leftEyeOpenness < BLINK_THRESHOLD;
-        const isRightBlinking = rightEyeOpenness < BLINK_THRESHOLD;
-
-        return isLeftBlinking && isRightBlinking
-    }
-
-    calculateEyeOpenness(upperPoints, lowerPoints) {
-        const upperCenter = upperPoints[Math.floor(upperPoints.length / 2)];
-        const lowerCenter = lowerPoints[Math.floor(lowerPoints.length / 2)];
-
-        return Math.abs(upperCenter[1] - lowerCenter[1]);
+        return this.faceData?.isBlinking || false;
     }
 
     reset() {
