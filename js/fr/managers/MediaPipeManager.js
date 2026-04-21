@@ -5,6 +5,8 @@ export class MediaPipeManager {
         this.faceLandmarker = null;
         this.videoElement = videoElement;
         this.faceData = null;
+        this.isRunning = false;
+        this.animationId = null;
     }
 
     async init() {
@@ -28,6 +30,7 @@ export class MediaPipeManager {
         console.log('MediaPipe инициализирован');
 
         await this.detectionLoop();
+        this.isRunning = true;
     }
 
     setElement(videoElement) {
@@ -38,7 +41,7 @@ export class MediaPipeManager {
         const timestamp = performance.now();
 
         this.faceData = await this.faceLandmarker.detectForVideo(this.videoElement, timestamp);
-        requestAnimationFrame(() => this.detectionLoop());
+        this.animationId = requestAnimationFrame(() => this.detectionLoop());
     }
 
     getFaceData() {
@@ -105,5 +108,13 @@ export class MediaPipeManager {
         const rightBlink = scores.eyeBlinkRight || 0;
 
         return leftBlink > 0.6 && rightBlink > 0.6;
+    }
+
+    stop() {
+        this.isRunning = false;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
     }
 }

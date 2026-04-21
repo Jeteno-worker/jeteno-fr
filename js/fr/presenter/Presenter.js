@@ -5,6 +5,8 @@ export class Presenter {
         this.isSmileDetected = false;
         this.isBlinkDetected = false;
         this.currentStage = 'position';
+        this.isRunning = true;
+        this.animationId = null;
     }
 
     async initStream() {
@@ -29,6 +31,7 @@ export class Presenter {
     }
 
     facePositionCheck() {
+        if (!this.isRunning) return;
         const faceMask = document.querySelector('.frame-mask');
 
         if (!faceMask) return
@@ -80,10 +83,11 @@ export class Presenter {
             this.view.updateInfoBlockMessage('Верните лицо в рамку');
         }
 
-        requestAnimationFrame(() => this.facePositionCheck());
+        this.animationId = requestAnimationFrame(() => this.facePositionCheck());
     }
 
     smileCheck() {
+        if (!this.isRunning) return;
         if (this.currentStage !== 'smile') return;
 
         const isSmiling = this.model.smileCheck();
@@ -100,6 +104,7 @@ export class Presenter {
     }
 
     blinkCheck() {
+        if (!this.isRunning) return;
         if (this.currentStage !== 'blink') return;
 
         const isBlinking = this.model.eyeCheck();
@@ -136,5 +141,13 @@ export class Presenter {
         this.model.reset();
         this.view.showResetButton(false);
         this.facePositionCheck()
+    }
+
+    stop() {
+        this.isRunning = false;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
     }
 }

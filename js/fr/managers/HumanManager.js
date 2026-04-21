@@ -3,6 +3,8 @@ export class HumanManager {
         this.human = null;
         this.videoElement = videoElement;
         this.faceData = null;
+        this.isRunning = false;
+        this.animationId = null;
     }
 
     async init () {
@@ -28,6 +30,8 @@ export class HumanManager {
         await this.human.load();
         await this.human.warmup();
         await this.detectionLoop();
+        this.isRunning = true;
+        console.log("init Human")
     }
 
     setElement(videoElement) {
@@ -36,7 +40,7 @@ export class HumanManager {
 
     async detectionLoop () {
         await this.human.detect(this.videoElement)
-        requestAnimationFrame(() => this.detectionLoop());
+        this.animationId = requestAnimationFrame(() => this.detectionLoop());
     }
 
     getFaceData () {
@@ -78,5 +82,13 @@ export class HumanManager {
         const lowerCenter = lowerPoints[Math.floor(lowerPoints.length / 2)];
 
         return Math.abs(upperCenter[1] - lowerCenter[1]);
+    }
+
+    stop() {
+        this.isRunning = false;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
     }
 }

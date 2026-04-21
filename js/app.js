@@ -5,11 +5,59 @@ import {HumanManager} from "./fr/managers/HumanManager.js";
 import {MediaPipeManager} from "./fr/managers/MediaPipeManager.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    const faceManager = new HumanManager();
-    // const faceManager = new MediaPipeManager();
-    const model = new FrModel(faceManager);
-    const view = new FrView();
-    const presenter = new Presenter(view, model);
+    let currentPresenter = null;
+    let currentModel = null;
+    let currentView = null;
 
-    presenter.initStream()
+    const engineSelect = document.getElementById('engineSelect');
+    const applyBtn = document.getElementById('applyEngineBtn');
+
+    function createManager(type) {
+        switch (type) {
+            case 'human':
+                return new HumanManager();
+            case 'mediapipe':
+                return new MediaPipeManager();
+            default:
+                return new HumanManager();
+        }
+    }
+
+    async function stopCurrentPresenter() {
+        if (currentPresenter) {
+            currentPresenter.stop();
+        }
+
+        if (currentModel) {
+            currentModel.stop();
+        }
+    }
+
+    async function initWithEngine(engineType) {
+        await stopCurrentPresenter();
+
+        const cameraContainer = document.getElementById('cameraContainer');
+        cameraContainer.innerHTML = '';
+
+        const oldResetButton = document.querySelector('.reset__button');
+        if (oldResetButton) {
+            oldResetButton.remove();
+        }
+
+        currentView = new FrView();
+
+        const faceManager = createManager(engineType);
+        currentModel = new FrModel(faceManager);
+        currentPresenter = new Presenter(currentView, currentModel);
+
+        await currentPresenter.initStream();
+    }
+
+    applyBtn.addEventListener('click', async () => {
+        const selectedEngine = engineSelect.value;
+        console.log(`Переключение на движок: ${selectedEngine}`);
+        await initWithEngine(selectedEngine);
+    });
+
+    initWithEngine('human');
 })

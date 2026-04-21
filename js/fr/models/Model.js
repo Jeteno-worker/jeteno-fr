@@ -5,6 +5,7 @@ export class FrModel {
         this.faceManager = faceManager;
         this.initialized = false;
         this.faceData = null;
+        this.animationId = null;
     }
 
     async startStream() {
@@ -48,7 +49,7 @@ export class FrModel {
             this.eyeCheck()
         }
 
-        requestAnimationFrame(() => this.getFaceData());
+        this.animationId = requestAnimationFrame(() => this.getFaceData());
     }
 
     setVideo(videoElement) {
@@ -89,5 +90,23 @@ export class FrModel {
         this.faceData = null;
 
         this.getFaceData();
+    }
+
+    stop() {
+        this.initialized = false;
+
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+
+        if (this.faceManager && this.faceManager.stop) {
+            this.faceManager.stop();
+        }
+
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
     }
 }
