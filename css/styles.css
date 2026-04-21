@@ -21,11 +21,12 @@ h1, h2, h3, h4, h5, h6 {
     background-position: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
-    min-height: 100vh;
+    height: 100%;
     padding: 20px 0;
     box-sizing: border-box;
+    gap: 10em;
 }
 
 .engine__selector {
