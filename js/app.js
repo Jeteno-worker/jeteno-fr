@@ -4,7 +4,7 @@ import {Presenter} from "./fr/presenter/Presenter.js";
 import {HumanManager} from "./fr/managers/HumanManager.js";
 import {MediaPipeManager} from "./fr/managers/MediaPipeManager.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     let currentPresenter = null;
     let currentModel = null;
     let currentView = null;
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentModel = new FrModel(faceManager);
         currentPresenter = new Presenter(currentView, currentModel);
 
-        currentPresenter.initStream();
+        await currentPresenter.initStream();
     }
 
     applyBtn.addEventListener('click', async () => {
@@ -59,5 +59,5 @@ document.addEventListener('DOMContentLoaded', () => {
         await initWithEngine(selectedEngine);
     });
 
-    initWithEngine('human');
+    await initWithEngine('human');
 })
