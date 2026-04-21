@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             case 'mediapipe':
                 return new MediaPipeManager();
             default:
-                return new HumanManager();
+                return new MediaPipeManager();
         }
     }
 
