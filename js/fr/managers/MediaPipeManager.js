@@ -29,8 +29,7 @@ export class MediaPipeManager {
 
         console.log('MediaPipe инициализирован');
 
-        setTimeout(() => this.detectionLoop(), 500);
-        // await this.detectionLoop();
+        await this.detectionLoop();
         this.isRunning = true;
     }
 

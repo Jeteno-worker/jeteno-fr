@@ -59,5 +59,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         await initWithEngine(selectedEngine);
     });
 
-    await initWithEngine('human');
+    await initWithEngine('mediapipe');
 })
